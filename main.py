@@ -19,25 +19,11 @@ def rockchipMultimedia():
         cache_time=3600,
     )
 
-    files.put(
-        name="Create udev rule to enable mpp and rga hw accel",
-        src="files/11-rockchip-multimedia.rules",
-        dest="/etc/udev/rules.d/11-rockchip-multimedia.rules",
-        mode="644",
+    apt.Install(
+        name="Install rockchip-multimedia-config",
+        packages=["rockchip-multimedia-config"],
+        latest=True
     )
-
-    if files.put(
-        name="Update rc.local",
-        src="files/rc.local",
-        dest="/etc/rc.local",
-        user="root",
-        group="root",
-        mode="775",
-    ).changed:
-        server.shell(
-            name="Execute rc.local",
-            commands=["/etc/rc.local"],
-        )
 
     if apt.packages(
         name="Install forked v4l libraries",
