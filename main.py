@@ -19,22 +19,17 @@ def rockchipMultimedia():
         cache_time=3600,
     )
 
-    apt.Install(
+    apt.packages(
         name="Install rockchip-multimedia-config",
         packages=["rockchip-multimedia-config"],
         latest=True
     )
 
-    if apt.packages(
+    apt.packages(
         name="Install forked v4l libraries",
         packages=["libv4l-rkmpp","v4l-utils"],
         latest=True
-    ).changed:
-        files.link(
-            name="Create link for libv4l2.so",
-            path="/usr/lib64/libv4l2.so",
-            target="aarch64-linux-gnu/libv4l2.so.0.0.0",
-        )
+    )
 
 # @deploy("Install Panfork Mesa to support Mali G610")
 def panforkMesa():
@@ -51,6 +46,11 @@ def panforkMesa():
 
 panforkMesa()
 rockchipMultimedia()
+apt.packages(
+    name="Install mali G610 firmware",
+    packages=["mali-g610-firmware"],
+    latest=True
+)
 apt.upgrade(
     name="Upgrade system",
 )
